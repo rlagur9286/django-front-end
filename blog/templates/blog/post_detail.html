@@ -1,0 +1,22 @@
+<h1>{{ post.title }}</h1>
+{{ post.content|linebreaks }}
+
+<hr/>
+
+{% for comment in post.comment_set.all %}
+    <li>
+        {{ comment.message }}
+        <a href="{% url "blog:comment_edit" post.pk comment.id%}">
+            &dash;<small> {{ comment.updated_at }} </small>
+        </a>
+
+        <a href="{% url "blog:comment_delete" post.pk comment.id%}">
+            <small> 삭제 </small>
+        </a>
+    </li>
+{% endfor %}
+<hr/>
+<a href="{% url "blog:index" %}">목록으로</a>
+<a href="{% url "blog:post_edit"  post.id %}">수정</a>
+<a href="{% url "blog:post_delete"  post.id %}">삭제</a>
+<a href="{% url "blog:comment_new" post.pk %}">댓글 쓰기</a>
