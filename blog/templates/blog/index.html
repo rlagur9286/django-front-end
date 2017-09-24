@@ -5,23 +5,32 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <table class="table table-bordered table-hover">
-                    <tbody>
-                    {% for post in post_list %}
-                        <tr>
-                            <td>
-                                <a href="{{ post.get_absolute_url }}">
-                                    {{ post.title }}
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+            <div class="col-sm-12" id="post-list-wrapper">
+                {% include "blog/_post_list.html" %}
                 <hr/>
+                <a id="page-2-btn" href="#">2페이지 로딩</a>
                 <a href="{% url 'blog:post_new' %}" class="btn btn-primary">새 글쓰기</a>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_body %}
+    <script>
+        $(function () {
+            $("#page-2-btn").click(function(e){
+                $.get('?page=2')
+                    .done(function(html){
+                        console.log(html);
+                        $('#post-list-wrapper').html(html);
+                    })
+                    .fail(function(){
+                        console.log('fail')
+                    })
+                    .always(function(){
+                        console.log('always')
+                    });
+                return false;
+            });
+        })
+    </script>
 {% endblock %}
