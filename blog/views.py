@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.shortcuts import resolve_url
 from django.views.generic import DetailView, UpdateView, ListView, DeleteView, CreateView
 from .models import Post, Comment
@@ -80,23 +81,7 @@ comment_delete = CommentDeleteView.as_view()
 
 
 @csrf_exempt
-def check(request):
-    file = request.FILES.get('img')
-
-    fd = open('tmp.jpg', 'wb')
-    for chunk in file.chunks():
-        fd.write(chunk)
-    fd.close()
-
-    image = tf.gfile.FastGFile('tmp.jpg', 'rb').read()
-    prediction = sess.run(logits, {'DecodeJpeg/contents:0': image})[0]
-
-    print('=== 예측 결과 ===')
-
-    if prediction[0] > prediction[1]:
-        name = labels[0]
-    else:
-        name = labels[1]
-    return JsonResponse({'success': True, 'result': name})
+def melon_search(request):
+    return render(request, 'blog/melon_search.html')
 
 
