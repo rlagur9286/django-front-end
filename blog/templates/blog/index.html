@@ -1,17 +1,27 @@
-<table>
-    <tbody>
-    {% for post in post_list %}
-        <tr>
-            <td>
-                <a href="{{ post.get_absolute_url }}">
-                    {{ post.title }}
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<hr/>
-
-<a href="{% url 'blog:post_new' %}">새 글쓰기</a>
+{% extends "blog/layout.html" %}
+<style>
+    @media (max-width: 600px) {    body {        background-color: green;    } }
+</style>
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                    {% for post in post_list %}
+                        <tr>
+                            <td>
+                                <a href="{{ post.get_absolute_url }}">
+                                    {{ post.title }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <hr/>
+                <a href="{% url 'blog:post_new' %}" class="btn btn-primary">새 글쓰기</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

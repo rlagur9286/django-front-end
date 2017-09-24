@@ -1,8 +1,19 @@
-<form action="" method="POST">
-    {% csrf_token %}
-    <p>정말 삭제 하시겠습니까?</p>
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="삭제하세요"/>
-</form>
+{% extends "blog/layout.html" %}
+{% block content %}
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="row">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <p class="alert alert-danger">
+                        정말 삭제 하시겠습니까?
+                    </p>
+                    <table>
+                        {{ form.as_table }}
+                    </table>
+                    <input type="submit" value="삭제하세요" class="btn btn-danger"/>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
