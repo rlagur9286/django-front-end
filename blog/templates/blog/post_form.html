@@ -1,4 +1,5 @@
 {% extends "blog/layout.html" %}
+{% load bootstrap3 %}
 {% block content %}
     <div class="container">
         <div class="col-sm-12">
@@ -6,7 +7,8 @@
                 <form action="" method="POST">
                     {% csrf_token %}
                     <table class="table table-hover table-bordered">
-                        {{ form.as_table }}
+{#                        {{ form.as_table }}#}
+                        {% bootstrap_form form %}
                     </table>
                     <input type="submit" class="btn btn-primary"/>
                 </form>
