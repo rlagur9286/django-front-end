@@ -1,10 +1,14 @@
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import resolve_url
 from django.views.generic import DetailView, UpdateView, ListView, DeleteView, CreateView
-from .models import Post, Comment
 from django.views.decorators.csrf import csrf_exempt
+from .serializers import PostSerializer
+from rest_framework.renderers import JSONRenderer
+from .models import Post, Comment
 
 
 class PostListView(ListView):
@@ -74,3 +78,10 @@ def melon_search(request):
     return render(request, 'blog/melon_search.html')
 
 
+def post_json(request):
+    qs = Post.objects.all()
+
+    serializer = PostSerializer(qs, many=True)
+    json_utf8_string = JSONRenderer().render(serializer.data)
+
+    return HttpResponse(json_utf8_string, content_type='application/json; charset=utf-8')

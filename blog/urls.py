@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -11,4 +11,7 @@ urlpatterns = [
     url(r'^(?P<post_pk>\d+)/comments/(?P<pk>\d+)/delete/$', views.comment_delete, name='comment_delete'),
 
     url(r'^melon_search/$', views.melon_search, name='melon_search'),
+    url(r'^posts\.json$', views.post_json, name='post_json'),
+
+    url(r'^api/v1/', include('blog.api')),
 ]
