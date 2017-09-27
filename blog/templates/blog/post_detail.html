@@ -1,4 +1,25 @@
 {% extends "blog/layout.html" %}
+{% block extra_body %}
+    <script>
+        $(function(){
+            $(document).on('click', '.ajax-post-confirm', function(e){
+                e.preventDefault();
+
+                var url = $(this).attr('href');
+                var target = $(this).data('target');
+                var message = $(this).data('message');
+
+                if(confirm(message)){
+                    $.post(url).done(function(res){
+                        $('#' + target).remove();
+                    }).fail(function(xhr, textStatus, error){
+                        alert('fail : ' + error);
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="col-sm-12">
@@ -10,13 +31,16 @@
                 <a href="{% url "blog:comment_new" post.pk %}" class="btn btn-primary btn-block">댓글 쓰기</a>
 
                 {% for comment in post.comment_set.all %}
-                    <li>
+                    <li id="comment-{{ comment.pk }}">
                         {{ comment.message }}
                         <a href="{% url "blog:comment_edit" post.pk comment.id%}">
                             &dash;<small> {{ comment.updated_at }} </small>
                         </a>
 
-                        <a href="{% url "blog:comment_delete" post.pk comment.id%}">
+                        <a href="{% url "blog:comment_delete" post.pk comment.id%}"
+                           class = "ajax-post-confirm"
+                           data-target="comment-{{ comment.pk }}"
+                           data-message="삭제하시겠습니까?">
                             <small> 삭제 </small>
                         </a>
                     </li>

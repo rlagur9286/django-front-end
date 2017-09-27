@@ -32,7 +32,6 @@ class PostDetailView(DetailView):
 
     def render_to_response(self, context):
         # json 리스폰스
-        print(context)
         if self.request.is_ajax():
             return JsonResponse({
                 'title': self.object.title,
