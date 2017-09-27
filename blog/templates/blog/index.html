@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <table class="table table-bordered table-hover" id="post_list">
+            <table class="table table-bordered table-hover" id="post-list">
                 <tbody>
                 {% include "blog/_post_list.html" %}
                 </tbody>
@@ -33,7 +33,7 @@
                     {#                    var next_page_url = '?page=' + (current_page + 1);#}
                     is_loading = true;
                     $.get(next_page_url).done(function (html) {
-                        $('#post_list tbody').append(html);
+                        $('#post-list tbody').append(html);
                         current_page = next_page;
                         {#                        history.pushState({}, '', next_page_url);#}
                     }).fail(function (xhr, textStatus, error) {
@@ -55,11 +55,47 @@
             });
             $("#load-more-btn").click(load_more);
 
-            $(document).on('click', '#post_list a', function(e){
+            $(document).on('click', '#post-list a', function(e){
                 e.preventDefault();
                 var url = $(this).attr('href');
-                alert(url);
+                var title = $(this).html();
+                var $modal = $("#post-modal");
+
+                $.get(url).done(function(json_object){
+                    $modal.find('.modal-title').html(json_object.title);
+                    $modal.find('.modal-body').html(json_object.summary);
+                    $modal.find('.btn-detail').attr('href', url);
+                    $modal.modal();
+                })
+                    .fail(function(xhr, textStatus, error){
+                        alert('failed : ' + error );
+                    });
+
             });
         });
     </script>
+
+    <div class="modal fade" id="post-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">포스팅 제목</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...<br/>
+                    ...<br/>
+                    ...<br/>
+                    ...<br/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <a class="btn btn-primary btn-detail">자세히</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

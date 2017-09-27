@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.shortcuts import resolve_url
 from django.views.generic import DetailView, UpdateView, ListView, DeleteView, CreateView
 from django.views.decorators.csrf import csrf_exempt
+from django.template.defaultfilters import truncatewords
 from .serializers import PostSerializer
 from rest_framework.renderers import JSONRenderer
 from .models import Post, Comment
@@ -25,7 +26,22 @@ index = PostListView.as_view()
 
 post_new = CreateView.as_view(model=Post, fields='__all__')
 
-post_detail = DetailView.as_view(model=Post)
+
+class PostDetailView(DetailView):
+    model = Post
+
+    def render_to_response(self, context):
+        # json 리스폰스
+        print(context)
+        if self.request.is_ajax():
+            return JsonResponse({
+                'title': self.object.title,
+                'summary': truncatewords(self.object.content, 100),
+            })
+        # 템플릿 렌더링
+        return super().render_to_response(context)
+
+post_detail = PostDetailView.as_view()
 
 post_edit = UpdateView.as_view(model=Post, fields='__all__')
 
