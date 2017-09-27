@@ -5,35 +5,55 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12" id="post-list-wrapper">
+            <table class="table table-bordered table-hover" id="post_list">
+                <tbody>
                 {% include "blog/_post_list.html" %}
-                <hr/>
-                <a id="page-2-btn" href="#">2페이지 로딩</a>
-                <a href="{% url 'blog:post_new' %}" class="btn btn-primary">새 글쓰기</a>
-            </div>
+                </tbody>
+            </table>
+            <a id="load-more-btn" class="btn btn-primary">Load More ...</a>
+            <hr/>
+            <a href="{% url 'blog:post_new' %}" class="btn btn-primary">새 글쓰기</a>
         </div>
     </div>
 {% endblock %}
 {% block extra_body %}
     <script>
         $(function () {
-            $("#page-2-btn").click(function(e){
-                $.get('?page=2')
-                    .done(function(html){
-                        $('#post-list-wrapper').html(html);
-                        var state_obj = {};   // pushState 후에 history.state로 접근 가능
-                        var title = "";
-                        var url = "?page=2";  // 이동할 URL
-                        history.pushState(state_obj, title, url)
+            var $win = $(window);
+            var is_loading = false;
+            var current_page = null;
+
+            var load_more = function(){
+                if (!is_loading) {
+                    console.log('More');
+                    {#                    var search_params = new URLSearchParams(window.location.search); // 현재 페이지의 GET인자를 가공#}
+                    {#                    var current_page = parseInt(search_params.get('page')) || 1;     // GET인자 page를 획득하고 없으면 1을 반환#}
+                    var next_page = (current_page || 1) + 1;
+                    var next_page_url = '?page=' + next_page;
+                    {#                    var next_page_url = '?page=' + (current_page + 1);#}
+                    is_loading = true;
+                    $.get(next_page_url).done(function (html) {
+                        $('#post_list tbody').append(html);
+                        current_page = next_page;
+                        {#                        history.pushState({}, '', next_page_url);#}
+                    }).fail(function (xhr, textStatus, error) {
+                        console.log(textStatus);
                     })
-                    .fail(function(){
-                        console.log('fail')
-                    })
-                    .always(function(){
-                        console.log('always')
-                    });
-                return false;
+                        .always(function () {
+                            console.log("always");
+                            is_loading = false;
+                        });
+                }
+            };
+
+            $win.scroll(function(){
+                var diff = $(document).height() - parseInt($win.height());
+                if (diff == $win.scrollTop() ) {
+                    console.log("바닥!")
+                    load_more();
+                }
             });
-        })
+            $("#load-more-btn").click(load_more);
+        });
     </script>
 {% endblock %}
