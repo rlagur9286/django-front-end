@@ -54,6 +54,12 @@
                 }
             });
             $("#load-more-btn").click(load_more);
+
+            $(document).on('click', '#post_list a', function(e){
+                e.preventDefault();
+                var url = $(this).attr('href');
+                alert(url);
+            });
         });
     </script>
 {% endblock %}
