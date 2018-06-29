@@ -1,2 +1,10 @@
-django
+django>=1.10.5
+django-extensions
+django-bootstrap3
+pilkit
+django-imagekit
+django-allauth==0.31.0
 djangorestframework
+markdown
+django-filter
+pillow

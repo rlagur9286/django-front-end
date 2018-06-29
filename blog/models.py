@@ -21,7 +21,7 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-id']
 
-    post = models.ForeignKey(Post)
+    post = models.ForeignKey(Post, on_delete=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
